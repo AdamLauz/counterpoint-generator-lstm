@@ -17,6 +17,10 @@ Sample of about 100 Bach's pieces are included in this project.
 **Output**: The input melody with counter point in Bach's style ("melody.mid")
 ![image](https://github.com/AdamLauz/counterpoint-generator-lstm/assets/2620814/9944594d-0d21-44ea-9ef3-224479065bbf)
 
+## Video Demo
+[<img src="https://img.youtube.com/vi/A5JWlJrUqtk/hqdefault.jpg" width="800" height="600"
+/>](https://www.youtube.com/embed/A5JWlJrUqtk)
+
 
 ## References
 <a id="1">[1]</a>
