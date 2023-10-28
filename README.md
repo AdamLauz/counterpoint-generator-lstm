@@ -11,10 +11,10 @@ Sample of about 100 Bach's pieces are included in this project.
 
 ## Input-Output Example
 
-**Input**: Sub-section of "Autumn Leaves" by Joseph Kosma:
+**Input**: Sub-section of "Autumn Leaves" by Joseph Kosma ("cantus.mxl"):
 ![image](https://github.com/AdamLauz/counterpoint-generator-lstm/assets/2620814/c5ab5d14-b526-41c2-b34b-91ccbb80800a)
 
-**Output**: The input melody with counter point in Bach's style
+**Output**: The input melody with counter point in Bach's style ("melody.mid")
 ![image](https://github.com/AdamLauz/counterpoint-generator-lstm/assets/2620814/f7b2a50a-9e6b-435c-af83-9206130c74b9)
 
 
