@@ -144,6 +144,8 @@ class CounterPointGenerator:
 
         p0 = parse_to_part(p0, cantus)
         p1 = parse_to_part(p1, counter)
+        p1.transpose(-12, inPlace=True)
+
         s.insert(0, p0)
         s.insert(0, p1)
         # write the m21 stream to a midi file
@@ -155,6 +157,6 @@ if __name__ == "__main__":
     file_path = "cantus.mxl"
     cantus = m21.converter.parse(file_path).parts[0]
     cantus_processed = preprocess_song(cantus, i=4, sub_dir="test")
-    melody = cpg.generate_counterpoint(cantus_processed, SEQUENCE_LENGTH, 0.1)
+    melody = cpg.generate_counterpoint(cantus_processed, SEQUENCE_LENGTH, 0.5)
     print(melody)
     cpg.save_melody(melody, file_name="melody.mid")
