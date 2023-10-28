@@ -6,7 +6,7 @@ This project is based on [[1]](#1) by Valerio Velardo.
 LSTM (Long Short-Term Memory) [[2]](#2) model is trained on sequences of cantus firmus and counter point melodies.
 
 ## Data
-Dataset for training the LSTM model is from http://www.mscorelib.com.
+MusicXML Dataset for training the LSTM model is from http://www.mscorelib.com.
 Sample of about 100 Bach's pieces are included in this project.
 
 ## References
