@@ -1,6 +1,6 @@
 # counterpoint-generator-lstm
 Generate counter point melody given cantus firmus using LSTM model. 
-this project is based on [[1]](#1) by Valerio Velardo.
+This project is based on [[1]](#1) by Valerio Velardo.
 
 ## Model
 LSTM (Long Short-Term Memory) [[2]](#2) model is trained on sequences of cantus firmus and counter point melodies.
