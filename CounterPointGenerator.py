@@ -41,7 +41,7 @@ class CounterPointGenerator:
         # map seed to int
         seed = [self._mappings[symbol] for symbol in seed]
 
-        seed = seed  # + [self._mappings["<BOC>"]]
+        seed = seed + [self._mappings["<BOC>"]]
 
         for _ in range(original_length):
 

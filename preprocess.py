@@ -5,13 +5,14 @@ import numpy as np
 import tensorflow.keras as keras
 from typing import Tuple, List
 
-MXL_DATASET_PATH = "cmidi/Bach"
+MXL_DATASET_PATH = "Bach"
 SAVE_DIR = "dataset"
 SINGLE_FILE_DATASET_CANTUS = "cantus_file_dataset"
 SINGLE_FILE_DATASET_COUNTER = "counter_file_dataset"
 MAPPING_PATH = "mapping.json"
 SEQUENCE_LENGTH = 65
-SONGS_TO_LOAD = 300
+SONGS_TO_LOAD = 100
+BEGINNING_OF_COUNTERPOINT = "<BOC>"
 
 # durations are expressed in quarter length
 ACCEPTABLE_DURATIONS = [
@@ -181,7 +182,7 @@ def preprocess(dataset_path: str):
 
     for i, (cantus, counter) in enumerate(zip(cantusfirmuses, counterpoints)):
         cantus_encoded = preprocess_song(cantus, i, "cantus")
-        counter_encoded = preprocess_song(cantus, i, "counter")
+        counter_encoded = preprocess_song(counter, i, "counter")
         if cantus_encoded:
             continue
         if counter_encoded:
@@ -241,7 +242,7 @@ def create_mapping(songs: str, mapping_path: str):
 
     # identify the vocabulary
     songs = songs.split()
-    vocabulary = list(set(songs))
+    vocabulary = list(set(songs)) + [BEGINNING_OF_COUNTERPOINT]
 
     # create mappings
     for i, symbol in enumerate(vocabulary):
@@ -289,13 +290,27 @@ def generate_training_sequences(sequence_length: int) -> Tuple[List[int], List[i
     targets = []
 
     # generate the training sequences
-    num_sequences = len(int_cantuses) - sequence_length
+    num_sequences = len(int_cantuses)# - sequence_length
     for i in range(num_sequences):
-        inputs.append(int_cantuses[i:i + sequence_length])
+        cantus_budget = len(int_cantuses) - i
+        counter_budget = i
+        if counter_budget < int(sequence_length / 2):
+            cantus_max = i + int(sequence_length / 2) + (int(sequence_length / 2) - counter_budget)
+        else:
+            cantus_max = i + int(sequence_length / 2)
+        if cantus_budget < int(sequence_length / 2):
+            counter_min = i - int(sequence_length / 2) - (int(sequence_length / 2) - cantus_budget)
+        else:
+            counter_min = i - min(counter_budget, int(sequence_length / 2))
+
+        cantus_min = i
+        counter_max = i
+        cur_input = int_cantuses[cantus_min:cantus_max] + convert_songs_to_int(BEGINNING_OF_COUNTERPOINT) + int_counters[counter_min:counter_max]
+        inputs.append(cur_input)
         targets.append(int_counters[i])
 
     # one-hot encode the sequences
-    vocabulary_size = len(set(int_cantuses).union(int_counters))
+    vocabulary_size = len(set(int_cantuses).union(int_counters)) + 1 # 1 is for <BOC>
 
     # inputs size: (# of sequences, sequence length, vocabulary size)
     inputs = keras.utils.to_categorical(inputs, num_classes=vocabulary_size)

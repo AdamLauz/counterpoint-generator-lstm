@@ -6,7 +6,7 @@ import json
 NUM_UNITS = [256]
 LOSS = "sparse_categorical_crossentropy"
 LEARNING_RATE = 0.001
-EPOCHS = 5
+EPOCHS = 30
 BATCH_SIZE = 64
 SAVE_MODEL_PATH = "model.h5"
 
@@ -41,7 +41,7 @@ def build_model(output_units: int, num_units: List[int], loss: str, learning_rat
     return model
 
 
-def train(output_units: int, num_units: List[int] = NUM_UNITS, loss: str = LOSS,
+def train(num_units: List[int] = NUM_UNITS, loss: str = LOSS,
           learning_rate: float = LEARNING_RATE):
     """Train and save TF model.
 
@@ -50,21 +50,23 @@ def train(output_units: int, num_units: List[int] = NUM_UNITS, loss: str = LOSS,
     :param loss (str): Type of loss function to use
     :param learning_rate (float): Learning rate to apply
     """
+    with open(MAPPING_PATH, "r") as fp:
+        mappings = json.load(fp)
 
     # generate the training sequences
     inputs, targets = generate_training_sequences(SEQUENCE_LENGTH)
 
     # build the network
+    output_units = len(mappings)
     model = build_model(output_units, num_units, loss, learning_rate)
 
     # train the model
-    model.fit(inputs, targets, epochs=EPOCHS, batch_size=BATCH_SIZE)
+    class_weight = {clss: 1 if clss in (mappings['/'], mappings['_']) else 40 for clss in range(output_units)}
+    model.fit(inputs, targets, epochs=EPOCHS, batch_size=BATCH_SIZE, class_weight=class_weight)
 
     # save the model
     model.save(SAVE_MODEL_PATH)
 
 
 if __name__ == "__main__":
-    with open(MAPPING_PATH, "r") as fp:
-        mappings = json.load(fp)
-    train(output_units=len(mappings))
+    train()
